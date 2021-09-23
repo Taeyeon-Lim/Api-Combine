@@ -2,6 +2,7 @@
 
 - axios 라이브러리 설치
 - 사용한 더미 API 주소 : https://jsonplaceholder.typicode.com/users
+- 구현 방식 : Custom Hook, react-async lib
 
 ### API 사용해보기(요청-로딩-에러 상태)
 
@@ -13,9 +14,22 @@
 - Use "useAsync Custom Hook"
 - Use useCallback
 - Reducer 컴포넌트 분리(useAsync.js)
+- API reload 버튼 생성
 
-### API reload 버튼 생성
-
-### Add Hook( useAsync.js ) : 반복되는 코드 줄이기
+### [Add] Hook( useAsync.js )로 비동기 작업 관리
 
 - 특정 파라미터의 API 요청
+
+### [install] react-async 라이브러리로 비동기 작업 관리
+
+- react-async의 일부 hook 사용
+- 장점
+
+1. 필요할 때, 불러서 바로 사용 가능
+2. 비동기 작업 기능도 대부분 보유
+3. hook 외에 컴포넌트로도 OK!
+4. 특정 promise의 작업 도중 중단하는 기능
+
+- 단점
+
+1. 옵션의 다양함(복잡함 증가)

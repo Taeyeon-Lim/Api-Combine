@@ -1,7 +1,7 @@
 import axios from 'axios';
-import useAsync from './useAsync';
+import { useAsync } from 'react-async';
 
-async function getUser(id) {
+async function getUser({ id }) {
   const reponse = await axios.get(
     `https://jsonplaceholder.typicode.com/users/${id}`,
   );
@@ -9,11 +9,14 @@ async function getUser(id) {
 }
 
 function User({ id }) {
-  // refatch 필요없음, [id]:아이디 값 변경 시 호출
-  const [state] = useAsync(() => getUser(id), [id]);
-  const { loading, data: user, error } = state;
+  // useAsync({ 이전 함수와 deps...비슷한 구조 })
+  const {
+    data: user,
+    error,
+    isLoading,
+  } = useAsync({ promiseFn: getUser, id, watch: id });
 
-  if (loading) return <div>loading...</div>;
+  if (isLoading) return <div>loading...</div>;
   if (error) return <div>error...!</div>;
   if (!user) return null;
 

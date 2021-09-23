@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
-import useAsync from './useAsync';
+import { useAsync } from 'react-async';
 import User from './User';
 
 async function getUsers() {
@@ -11,15 +11,24 @@ async function getUsers() {
 }
 
 function Users() {
-  // Hook, useAsync(callback, deps 기본값=[] "생략 가능", 컴포넌트 첫 렌더링 요청 생략)
-  const [state, refetch] = useAsync(getUsers, [], true);
   const [userId, setUserId] = useState(null);
+  // reload = 이전의 refetch
+  const {
+    data: users,
+    error,
+    isLoading,
+    reload,
+    run,
+  } = useAsync({
+    // promiseFn: getUsers
+    // 버튼 클릭 시, 데이터 호출(deferFn)
+    deferFn: getUsers,
+  });
 
   // 로딩-에러-users유무 확인
-  const { loading, data: users, error } = state;
-  if (loading) return <div>loading...</div>;
+  if (isLoading) return <div>loading...</div>;
   if (error) return <div>Error...!</div>;
-  if (!users) return <button onClick={refetch}>reload</button>;
+  if (!users) return <button onClick={run}>reload</button>;
 
   // users 데이터 존재
   return (
@@ -31,7 +40,7 @@ function Users() {
           </li>
         ))}
       </ul>
-      <button onClick={refetch}>API 재호출</button>
+      <button onClick={reload}>API 재호출</button>
       {userId && <User id={userId} />}
     </>
   );
