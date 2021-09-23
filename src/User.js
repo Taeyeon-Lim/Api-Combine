@@ -1,22 +1,22 @@
-import axios from 'axios';
-import { useAsync } from 'react-async';
-
-async function getUser({ id }) {
-  const reponse = await axios.get(
-    `https://jsonplaceholder.typicode.com/users/${id}`,
-  );
-  return reponse.data;
-}
+import { useEffect } from 'react/cjs/react.development';
+import {
+  getUser,
+  useUsersDispatch,
+  useUsersState,
+} from './UsersContext';
 
 function User({ id }) {
-  // useAsync({ 이전 함수와 deps...비슷한 구조 })
-  const {
-    data: user,
-    error,
-    isLoading,
-  } = useAsync({ promiseFn: getUser, id, watch: id });
+  const state = useUsersState();
+  const dispatch = useUsersDispatch();
 
-  if (isLoading) return <div>loading...</div>;
+  // 컴포넌트 첫 렌더링 or [id]가 바뀔 때 요청
+  useEffect(() => {
+    getUser(dispatch, id);
+  }, [dispatch, id]);
+
+  const { loading, data: user, error } = state.user;
+
+  if (loading) return <div>loading...</div>;
   if (error) return <div>error...!</div>;
   if (!user) return null;
 

@@ -1,5 +1,7 @@
+import axios from 'axios';
 import { createContext, useContext, useReducer } from 'react';
 
+// 초기 상태
 const initialState = {
   users: {
     loading: false,
@@ -13,6 +15,7 @@ const initialState = {
   },
 };
 
+// 상태 변경 용이하게 객체, 함수 생성
 const loadingState = {
   loading: true,
   data: null,
@@ -71,7 +74,7 @@ function usersReducer(state, action) {
   }
 }
 
-// 컴포넌트 최적화
+// Context 2개 생성(state, dispatch)
 const UsersStateContext = createContext(null);
 const UsersDispatchContext = createContext(null);
 
@@ -87,6 +90,7 @@ export function UsersProvider({ children }) {
   );
 }
 
+// state, dispatch 사용하기 쉽도록
 export function useUsersState() {
   const state = useContext(UsersStateContext);
   if (!state) {
@@ -95,10 +99,47 @@ export function useUsersState() {
   return state;
 }
 
-export function useUserDispatch() {
-  const dispatch = useContext(useUserDispatch);
+export function useUsersDispatch() {
+  const dispatch = useContext(UsersDispatchContext);
   if (!dispatch) {
     throw new Error('Cannot find UserProvider');
   }
   return dispatch;
+}
+
+// api 요청(axios)
+export async function getUsers(dispatch) {
+  dispatch({ type: 'GET_USERS' });
+  try {
+    const response = await axios.get(
+      'https://jsonplaceholder.typicode.com/users',
+    );
+    dispatch({
+      type: 'GET_USERS_SUCCESS',
+      data: response.data,
+    });
+  } catch (e) {
+    dispatch({
+      type: 'GET_USERS_ERROR',
+      error: e,
+    });
+  }
+}
+
+export async function getUser(dispatch, id) {
+  dispatch({ type: 'GET_USER' });
+  try {
+    const response = await axios.get(
+      `https://jsonplaceholder.typicode.com/users/${id}`,
+    );
+    dispatch({
+      type: 'GET_USER_SUCCESS',
+      data: response.data,
+    });
+  } catch (e) {
+    dispatch({
+      type: 'GET_USER_ERROR',
+      error: e,
+    });
+  }
 }
