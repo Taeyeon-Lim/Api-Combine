@@ -1,5 +1,6 @@
 import { useEffect, useReducer, useCallback } from 'react';
 
+// [Hook]
 // LOADING, SUCCESS, ERROR 액션 관리
 function reducer(state, action) {
   switch (action.type) {
