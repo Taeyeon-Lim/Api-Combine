@@ -27,7 +27,7 @@ function reducer(state, action) {
 }
 
 // callback = API호출 함수, deps = 값 변화 시, 재 호출
-function useAsync(callback, deps = []) {
+function useAsync(callback, deps = [], skip = false) {
   const [state, dispatch] = useReducer(reducer, {
     loading: false,
     data: null,
@@ -46,6 +46,7 @@ function useAsync(callback, deps = []) {
   }, [callback]);
 
   useEffect(() => {
+    if (skip) return;
     fetchData();
     // deps 그대로 받아서 사용하기 위해 eslint 1줄 무시
     // eslint-disable-next-line
