@@ -10,3 +10,6 @@
 ### 리팩토링(useReducer, 요청 상태 관리)
 
 - useReducer로 같은 작업 구현(재사용성 up)
+- Use "useAsync Custom Hook"
+- Use useCallback
+- Reducer 컴포넌트 분리(useAsync.js)
