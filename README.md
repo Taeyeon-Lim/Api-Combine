@@ -6,3 +6,7 @@
 ### API 사용해보기(요청-로딩-에러 상태)
 
 - 요청 결과, 로딩 상태, 에러 유무 관리 (users, loading, error)
+
+### 리팩토링(useReducer, 요청 상태 관리)
+
+- useReducer로 같은 작업 구현(재사용성 up)
