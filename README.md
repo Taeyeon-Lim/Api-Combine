@@ -16,7 +16,7 @@
 - Reducer 컴포넌트 분리(useAsync.js)
 - API reload 버튼 생성
 
-### [Add] Hook( useAsync.js )로 비동기 작업 관리
+### [Add] Hook( useAsync )로 비동기 작업 관리
 
 - 특정 파라미터의 API 요청
 
@@ -33,3 +33,7 @@
 - 단점
 
 1. 옵션의 다양함(복잡함 증가)
+
+### [Add] Context에서 비동기 작업 관리
+
+- Context 생성
