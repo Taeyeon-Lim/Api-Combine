@@ -1,74 +1,32 @@
-import axios from 'axios';
 import { createContext, useContext, useReducer } from 'react';
+import createAsyncDispatcher, {
+  createAsyncHandler,
+  initialAsyncState,
+} from './asyncActionUtils';
+// api 파일의 모든 export를 api 객체로 호출
+import * as api from './api';
 
 // 초기 상태
 const initialState = {
-  users: {
-    loading: false,
-    data: null,
-    error: null,
-  },
-  user: {
-    loading: false,
-    data: null,
-    error: null,
-  },
+  users: initialAsyncState,
+  user: initialAsyncState,
 };
 
-// 상태 변경 용이하게 객체, 함수 생성
-const loadingState = {
-  loading: true,
-  data: null,
-  error: null,
-};
-
-const success = data => ({
-  loading: false,
-  data,
-  error: null,
-});
-
-const error = e => ({
-  loading: false,
-  data: null,
-  error: e,
-});
-
+const usersHandler = createAsyncHandler('GET_USERS', 'users');
+const userHandler = createAsyncHandler('GET_USER', 'user');
 // 6가지 액션에 대한 리듀서
 function usersReducer(state, action) {
   switch (action.type) {
     // ACTION_1: GET_USERS, GET_USERS_SUCCESS, GET_USERS_ERROR
     case 'GET_USERS':
-      return {
-        ...state,
-        users: loadingState,
-      };
     case 'GET_USERS_SUCCESS':
-      return {
-        ...state,
-        users: success(action.data),
-      };
     case 'GET_USERS_ERROR':
-      return {
-        ...state,
-        users: error(action.error),
-      };
+      return usersHandler(state, action);
     // ACTION_2: GET_USER, GET_USER_SUCCESS, GET_USER_ERROR
     case 'GET_USER':
-      return {
-        ...state,
-        user: loadingState,
-      };
     case 'GET_USER_SUCCESS':
-      return {
-        ...state,
-        user: success(action.data),
-      };
     case 'GET_USER_ERROR':
-      return {
-        ...state,
-        user: error(action.error),
-      };
+      return userHandler(state, action);
     default:
       throw new Error('Unhandled action type:', action.type);
   }
@@ -107,39 +65,8 @@ export function useUsersDispatch() {
   return dispatch;
 }
 
-// api 요청(axios)
-export async function getUsers(dispatch) {
-  dispatch({ type: 'GET_USERS' });
-  try {
-    const response = await axios.get(
-      'https://jsonplaceholder.typicode.com/users',
-    );
-    dispatch({
-      type: 'GET_USERS_SUCCESS',
-      data: response.data,
-    });
-  } catch (e) {
-    dispatch({
-      type: 'GET_USERS_ERROR',
-      error: e,
-    });
-  }
-}
-
-export async function getUser(dispatch, id) {
-  dispatch({ type: 'GET_USER' });
-  try {
-    const response = await axios.get(
-      `https://jsonplaceholder.typicode.com/users/${id}`,
-    );
-    dispatch({
-      type: 'GET_USER_SUCCESS',
-      data: response.data,
-    });
-  } catch (e) {
-    dispatch({
-      type: 'GET_USER_ERROR',
-      error: e,
-    });
-  }
-}
+export const getUsers = createAsyncDispatcher(
+  'GET_USERS',
+  api.getUsers,
+);
+export const getUser = createAsyncDispatcher('GET_USER', api.getUser);
